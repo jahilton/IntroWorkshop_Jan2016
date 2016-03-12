@@ -1,7 +1,7 @@
 import urllib2
 
 parks = {}
-#parks['TEST'] = 72486
+# parks['TEST'] = 72486
 parks['North Pines'] = 70927
 parks['Lower Pines'] = 70928
 parks['Upper Pines'] = 70925
@@ -12,12 +12,20 @@ parks['Crane Flat'] = 70930
 parks['Hodgon'] = 70929
 
 for x, y in parks.iteritems():
-	print 'Campground:', x
-	url = 'http://www.recreation.gov/campsiteCalendar.do?page=calendar&contractCode=NRSO&parkId=%s&calarvdate=06/19/2016&sitepage=true&startIdx=0' % y
-	req = urllib2.Request(url, headers={'User-Agent' : "Magic Browser"}) 
-	for n in range(1,8):
-		count = 0
-		for line in urllib2.urlopen( req ):
-			if "id='avail%d'" % n in line:
-				count += 1
-		print 18+n, count
+    count = 0
+    linelist = []
+    print 'Campground:', x
+    url = 'http://www.recreation.gov/campsiteCalendar.do?page=calendar&contractCode=NRSO&parkId=%s&calarvdate=06/19/2016&sitepage=true&startIdx=0' % y
+    req = urllib2.Request(url, headers={'User-Agent': "Magic Browser"})
+    for line in urllib2.urlopen(req):
+            if "status a" in line:
+                linelist.append(line)
+                count += 1
+    if count > 0:
+        for n in range(1, 8):
+            count = 0
+            for x in linelist:
+                if "avail%d" % n in x:
+                    count += 1
+            print 18+n, count
+
